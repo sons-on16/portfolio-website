@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Abdulmohsen Alnowayhi Profile',
+  description: 'Professional portfolio showcasing expertise in GRC, compliance, and cybersecurity',
+  keywords: ['GRC', 'Cybersecurity', 'Compliance', 'Risk Management', 'Information Security'],
+  authors: [{ name: 'Abdulmohsen Alnowayhi' }],
+  creator: 'Abdulmohsen Alnowayhi',
 }
 
 export default function RootLayout({
