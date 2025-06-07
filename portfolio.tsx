@@ -111,6 +111,7 @@ export default function GRCPortfolio() {
   }
 
   const getScrollProgress = () => {
+    if (typeof window === 'undefined') return 0
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight
     return (scrollY / totalHeight) * 100
   }
