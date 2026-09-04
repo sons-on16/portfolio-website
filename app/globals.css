@@ -3,38 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --background: 44 33% 96%;
-  --foreground: 213 36% 14%;
-  --card: 0 0% 100%;
-  --card-foreground: 213 36% 14%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 213 36% 14%;
-  --primary: 213 36% 14%;
-  --primary-foreground: 44 33% 96%;
-  --secondary: 178 34% 92%;
-  --secondary-foreground: 213 36% 14%;
-  --muted: 44 20% 91%;
-  --muted-foreground: 213 12% 43%;
-  --accent: 163 57% 52%;
-  --accent-foreground: 213 36% 14%;
+  --background: 220 38% 9%;
+  --foreground: 210 25% 94%;
+  --card: 220 32% 13%;
+  --card-foreground: 210 25% 94%;
+  --popover: 220 32% 13%;
+  --popover-foreground: 210 25% 94%;
+  --primary: 174 72% 48%;
+  --primary-foreground: 220 38% 9%;
+  --secondary: 220 26% 18%;
+  --secondary-foreground: 210 25% 94%;
+  --muted: 220 26% 16%;
+  --muted-foreground: 215 16% 66%;
+  --accent: 38 91% 61%;
+  --accent-foreground: 220 38% 9%;
   --destructive: 0 70% 52%;
   --destructive-foreground: 0 0% 100%;
-  --border: 213 15% 82%;
-  --input: 213 15% 82%;
-  --ring: 163 57% 52%;
+  --border: 215 22% 24%;
+  --input: 215 22% 24%;
+  --ring: 174 72% 48%;
   --radius: 0.75rem;
 }
 
 * { @apply border-border; }
 html { scroll-behavior: smooth; }
 body { @apply bg-background text-foreground font-sans antialiased; }
-::selection { @apply bg-accent text-accent-foreground; }
+::selection { @apply bg-primary text-primary-foreground; }
 :focus-visible { outline: 2px solid hsl(var(--accent)); outline-offset: 3px; }
 
 @layer utilities {
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
   .eyebrow { @apply font-mono text-xs uppercase tracking-[0.2em] text-primary; }
-  .stat { @apply font-mono text-2xl font-semibold tracking-tight; }
+  .stat { @apply font-mono text-2xl font-semibold tracking-tight text-primary; }
   .stat-label { @apply mt-1 text-xs leading-5 text-muted-foreground; }
+}
+
+@layer base {
+  h1, h2, h3 { text-wrap: balance; }
+  a, button { -webkit-tap-highlight-color: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
