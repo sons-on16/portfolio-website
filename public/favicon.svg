@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" fill="black"/>
-  <path d="M6 24V8H10L14 18L18 8H22V24H19V12L15 22H13L9 12V24H6Z" fill="white"/>
-  <path d="M24 24V8H28L32 18L36 8H40V24H37V12L33 22H31L27 12V24H24Z" fill="white"/>
-</svg> 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AA monogram">
+  <rect width="64" height="64" fill="#050505"/>
+  <path d="M14 49 25.5 15h7L44 49h-6.5l-2.6-8H23.5l-2.7 8H14Zm11.3-14h7.8l-3.9-12-3.9 12Z" fill="#fff"/>
+  <path d="M35 49 46.5 15h7L64 49h-6.5l-2.6-8H44.5l-2.7 8H35Zm11.3-14h7.8l-3.9-12-3.9 12Z" fill="#94a3b8"/>
+</svg>
