@@ -2,31 +2,22 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Abdulmohsen Alnowayhi Profile',
-  description: 'Professional portfolio showcasing expertise in GRC, compliance, and cybersecurity',
-  keywords: ['GRC', 'Cybersecurity', 'Compliance', 'Risk Management', 'Information Security'],
+  title: 'Abdulmohsen Alnowayhi | Cybersecurity & GRC',
+  description: 'Cybersecurity and GRC portfolio of Abdulmohsen Alnowayhi — focused on PDPL, privacy by design, risk, compliance, and security operations.',
+  keywords: ['Cybersecurity', 'GRC', 'PDPL', 'ISO 27001', 'Risk Management', 'Information Security', 'Riyadh'],
   authors: [{ name: 'Abdulmohsen Alnowayhi' }],
   creator: 'Abdulmohsen Alnowayhi',
-  icons: {
-    icon: [
-      {
-        url: '/favicon.svg',
-        type: 'image/svg+xml',
-      }
-    ]
-  }
+  openGraph: {
+    title: 'Abdulmohsen Alnowayhi | Cybersecurity & GRC',
+    description: 'Turning security requirements into practical controls.',
+    type: 'website',
+  },
+  icons: { icon: '/favicon.svg' },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-      </head>
+    <html lang="en" className="bg-background">
       <body>{children}</body>
     </html>
   )

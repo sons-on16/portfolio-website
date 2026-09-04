@@ -1,878 +1,97 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Shield, Users, FileCheck, Mail, Linkedin, Code, Brain, Menu, X, ChevronDown, ExternalLink } from "lucide-react"
-import Image from "next/image"
+import { useState } from "react"
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  ChevronRight,
+  ExternalLink,
+  FileCheck2,
+  Linkedin,
+  Mail,
+  Menu,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from "lucide-react"
 
-const roles = ["Entry-Level GRC Analyst", "Security Compliance Associate", "Junior Risk Analyst"]
+const navItems = [
+  { href: "#about", label: "About" },
+  { href: "#capabilities", label: "Capabilities" },
+  { href: "#projects", label: "Projects" },
+  { href: "#experience", label: "Experience" },
+  { href: "#contact", label: "Contact" },
+]
 
-const navigationItems = [
-  { id: "hero", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "education", label: "Education" },
-  { id: "skills", label: "Skills" },
-  { id: "experience", label: "Experience" },
-  { id: "certifications", label: "Certifications" },
-  { id: "contact", label: "Contact" },
+const capabilities = [
+  { icon: ShieldCheck, title: "GRC & compliance", text: "PDPL reviews, risk concepts, policy application, control thinking, and practical documentation." },
+  { icon: FileCheck2, title: "Privacy by design", text: "Data minimisation and secure handling translated into usable internal products and workflows." },
+  { icon: CheckCircle2, title: "Security operations", text: "Access control, incident escalation, security awareness, and confidential data handling." },
+]
+
+const projects = [
+  { number: "01", title: "Privacy-first internal communications", tag: "PDPL · Secure development", text: "Designed, built, and deployed a password-gated internal web application now in active use. HTTPS, brute-force lockout protection, and zero personal data keep the product intentionally lean.", outcome: "PDPL compliance review completed" },
+  { number: "02", title: "Phishing simulation & awareness platform", tag: "NCA grant · Human risk", text: "Working prototype created as a final-year project with human-factor risk assessment and performance tracking, structured around governance and security-awareness outcomes.", outcome: "NCA Cybersecurity Pioneer Grant" },
+  { number: "03", title: "Validation-driven quotation tool", tag: "Automation · Data integrity", text: "Automated quotation workflow with division-based controls for banking details, contractual clauses, and authorised signatories—safeguarding sensitive commercial data.", outcome: "Removed recurring data-integrity errors" },
+]
+
+const roles = [
+  { dates: "May 2026 — Present", title: "Sales Specialist", company: "Saudi Liebherr Company · Riyadh", current: true, text: "Building secure internal tools, leading a PDPL compliance review, and translating operational requirements into reliable workflows." },
+  { dates: "Nov 2025 — May 2026", title: "Event Operations Specialist", company: "Saudi Equestrian Events Company · Riyadh", text: "Managed confidential accommodation data for 200+ international participants and coordinated access-control and security deployment across venues." },
+  { dates: "Mar 2026 — May 2026", title: "Small Power Technician Supervisor", company: "Rouad Alsaraya · Freelance", text: "Supervised compliant small-power operations at AFC Tournament venues, conducting inspections and coordinating contractors." },
+  { dates: "Oct 2025 — Nov 2025", title: "IT & BOH Supervisor", company: "Blink Experience · Riyadh", text: "Delivered first-line IT support, resolved infrastructure issues, and escalated incidents through documented response procedures." },
+  { dates: "Jul 2023 — Sep 2023", title: "IT Specialist & Administrator", company: "3points Crowd Management · Riyadh", text: "Ran attendance verification for 1,000+ staff at 99.8% accuracy with zero security breaches, plus WhatsApp API automation reaching 9,000+ individuals." },
 ]
 
 export default function GRCPortfolio() {
-  const [currentRole, setCurrentRole] = useState(0)
-  const [displayText, setDisplayText] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
-  const [charIndex, setCharIndex] = useState(0)
-  const [activeSection, setActiveSection] = useState("hero")
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
-  const sectionRefs = {
-    hero: useRef(null),
-    about: useRef(null),
-    education: useRef(null),
-    skills: useRef(null),
-    experience: useRef(null),
-    certifications: useRef(null),
-    contact: useRef(null),
-  }
-
-  useEffect(() => {
-    setIsLoaded(true)
-  }, [])
-
-  useEffect(() => {
-    const currentRoleText = roles[currentRole]
-
-    if (isTyping) {
-      if (charIndex < currentRoleText.length) {
-        const timeout = setTimeout(() => {
-          setDisplayText(currentRoleText.slice(0, charIndex + 1))
-          setCharIndex(charIndex + 1)
-        }, 80)
-        return () => clearTimeout(timeout)
-      } else {
-        const timeout = setTimeout(() => {
-          setIsTyping(false)
-        }, 2000)
-        return () => clearTimeout(timeout)
-      }
-    } else {
-      if (charIndex > 0) {
-        const timeout = setTimeout(() => {
-          setDisplayText(currentRoleText.slice(0, charIndex - 1))
-          setCharIndex(charIndex - 1)
-        }, 40)
-        return () => clearTimeout(timeout)
-      } else {
-        setCurrentRole((prev) => (prev + 1) % roles.length)
-        setIsTyping(true)
-      }
-    }
-  }, [currentRole, charIndex, isTyping])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-
-      const sections = navigationItems.map((item) => document.getElementById(item.id))
-      const scrollPosition = window.scrollY + 100
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i]
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navigationItems[i].id)
-          break
-        }
-      }
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-      setMobileMenuOpen(false)
-    }
-  }
-
-  const getScrollProgress = () => {
-    if (typeof window === 'undefined') return 0
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight
-    return (scrollY / totalHeight) * 100
-  }
-
-  const getAnimationDelay = (baseDelay: number, index = 0) => {
-    return baseDelay + index * 150
-  }
+  const closeMenu = () => setMenuOpen(false)
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-x-hidden">
-      {/* Saudi Arabian Landmarks Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        {/* Kingdom Centre Tower (Riyadh) */}
-        <svg
-          className="absolute opacity-[0.03] w-96 h-auto"
-          style={{
-            top: "5%",
-            right: "5%",
-            transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px)`,
-          }}
-          viewBox="0 0 100 300"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M50 0L40 250L30 260L30 290L70 290L70 260L60 250L50 0Z" stroke="currentColor" strokeWidth="1" />
-          <path d="M30 290L70 290" stroke="currentColor" strokeWidth="2" />
-          <path d="M35 260L65 260" stroke="currentColor" strokeWidth="1" />
-          <path d="M40 250L60 250" stroke="currentColor" strokeWidth="1" />
-          <path d="M45 200L55 200" stroke="currentColor" strokeWidth="1" />
-          <path d="M45 150L55 150" stroke="currentColor" strokeWidth="1" />
-          <path d="M45 100L55 100" stroke="currentColor" strokeWidth="1" />
-          <path d="M45 50L55 50" stroke="currentColor" strokeWidth="1" />
-        </svg>
-
-        {/* Abraj Al-Bait (Mecca Clock Tower) */}
-        <svg
-          className="absolute opacity-[0.03] w-80 h-auto"
-          style={{
-            bottom: "10%",
-            left: "5%",
-            transform: `translate(${mousePosition.x * 0.008}px, ${mousePosition.y * 0.008}px)`,
-          }}
-          viewBox="0 0 120 300"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect x="30" y="50" width="60" height="250" stroke="currentColor" strokeWidth="1" />
-          <rect x="40" y="20" width="40" height="30" stroke="currentColor" strokeWidth="1" />
-          <rect x="45" y="0" width="30" height="20" stroke="currentColor" strokeWidth="1" />
-          <circle cx="60" cy="120" r="20" stroke="currentColor" strokeWidth="1" />
-          <path d="M60 105L60 120L75 120" stroke="currentColor" strokeWidth="1" />
-          <line x1="30" y1="160" x2="90" y2="160" stroke="currentColor" strokeWidth="1" />
-          <line x1="30" y1="200" x2="90" y2="200" stroke="currentColor" strokeWidth="1" />
-          <line x1="30" y1="240" x2="90" y2="240" stroke="currentColor" strokeWidth="1" />
-        </svg>
-
-        {/* Al-Faisaliyah Center */}
-        <svg
-          className="absolute opacity-[0.03] w-64 h-auto"
-          style={{
-            top: "40%",
-            left: "15%",
-            transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`,
-          }}
-          viewBox="0 0 100 300"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M50 0L30 200L20 220L20 250L80 250L80 220L70 200L50 0Z" stroke="currentColor" strokeWidth="1" />
-          <path d="M35 100L65 100" stroke="currentColor" strokeWidth="1" />
-          <path d="M30 150L70 150" stroke="currentColor" strokeWidth="1" />
-          <path d="M25 200L75 200" stroke="currentColor" strokeWidth="1" />
-          <path d="M20 250L80 250" stroke="currentColor" strokeWidth="1" />
-          <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="1" />
-        </svg>
-
-        {/* Riyadh Skyline */}
-        <svg
-          className="absolute opacity-[0.03] w-full h-32"
-          style={{
-            bottom: "0",
-            left: "0",
-            transform: `translate(${mousePosition.x * 0.003}px, ${mousePosition.y * 0.003}px)`,
-          }}
-          viewBox="0 0 1000 100"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0,100 L50,100 L50,70 L70,70 L70,40 L90,40 L90,60 L110,60 L110,30 L130,30 L130,50 L150,50 L150,80 L170,80 L170,60 L190,60 L190,40 L210,40 L210,70 L230,70 L230,50 L250,50 L250,30 L270,30 L270,60 L290,60 L290,80 L310,80 L310,50 L330,50 L330,70 L350,70 L350,40 L370,40 L370,60 L390,60 L390,20 L410,20 L410,50 L430,50 L430,70 L450,70 L450,40 L470,40 L470,60 L490,60 L490,80 L510,80 L510,60 L530,60 L530,30 L550,30 L550,50 L570,50 L570,70 L590,70 L590,40 L610,40 L610,60 L630,60 L630,80 L650,80 L650,50 L670,50 L670,30 L690,30 L690,60 L710,60 L710,40 L730,40 L730,70 L750,70 L750,50 L770,50 L770,80 L790,80 L790,60 L810,60 L810,40 L830,40 L830,70 L850,70 L850,50 L870,50 L870,30 L890,30 L890,60 L910,60 L910,80 L930,80 L930,50 L950,50 L950,70 L970,70 L970,40 L990,40 L990,60 L1000,60 L1000,100 Z"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-        </svg>
-
-        {/* Minimal Grid Pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(71, 85, 105, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(71, 85, 105, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: "60px 60px",
-            transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.05}px)`,
-          }}
-        />
-      </div>
-
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-slate-200/50 z-50">
-        <div
-          className="h-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-300 ease-out"
-          style={{ width: `${getScrollProgress()}%` }}
-        />
-      </div>
-
-      {/* Mobile Menu Button */}
-      <button
-        className={`fixed top-6 right-6 z-50 p-3 rounded-full bg-white/95 backdrop-blur-sm text-slate-700 md:hidden shadow-lg border border-slate-200/50 transition-all duration-300 hover:scale-110 hover:shadow-xl ${
-          mobileMenuOpen ? "rotate-90" : ""
-        }`}
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-      >
-        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Mobile Navigation */}
-      <div
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-500 ${
-          mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-      >
-        <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-sm" />
-        <div className="relative h-full flex items-center justify-center">
-          <nav className="w-full max-w-sm p-8">
-            <ul className="space-y-8">
-              {navigationItems.map((item, index) => (
-                <li
-                  key={item.id}
-                  className="text-center transform transition-all duration-500"
-                  style={{
-                    transitionDelay: mobileMenuOpen ? `${index * 100}ms` : "0ms",
-                    transform: mobileMenuOpen ? "translateY(0)" : "translateY(20px)",
-                    opacity: mobileMenuOpen ? 1 : 0,
-                  }}
-                >
-                  <button
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-xl font-medium transition-all duration-300 py-3 px-6 rounded-full w-full relative overflow-hidden group ${
-                      activeSection === item.id ? "bg-indigo-600 text-white shadow-lg" : "text-white hover:bg-white/10"
-                    }`}
-                  >
-                    <span className="relative z-10">{item.label}</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </button>
-                </li>
-              ))}
-            </ul>
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+      <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
+          <a href="#top" className="flex items-center gap-3" onClick={closeMenu}>
+            <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground"><ShieldCheck className="size-5" /></span>
+            <span className="font-mono text-sm font-semibold tracking-tight">A / ALNOWAYHI</span>
+          </a>
+          <nav className="hidden items-center gap-7 md:flex" aria-label="Main navigation">
+            {navItems.map((item) => <a key={item.href} href={item.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">{item.label}</a>)}
+            <a href="mailto:abdulmohsenalnowayhi@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5">Let&apos;s talk</a>
           </nav>
+          <button type="button" className="rounded-md p-2 md:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
         </div>
-      </div>
+        {menuOpen && <nav className="flex flex-col gap-1 border-t border-border px-6 py-4 md:hidden" aria-label="Mobile navigation">{navItems.map((item) => <a key={item.href} href={item.href} onClick={closeMenu} className="rounded-md px-3 py-3 text-muted-foreground hover:bg-muted hover:text-foreground">{item.label}</a>)}</nav>}
+      </header>
 
-      {/* Enhanced Right Side Navigation */}
-      <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-30 hidden md:block">
-        <div className="relative">
-          {/* Progress Line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-slate-300/50 rounded-full">
-            <div
-              className="w-full bg-gradient-to-b from-indigo-500 to-blue-500 rounded-full transition-all duration-500 ease-out"
-              style={{ height: `${getScrollProgress()}%` }}
-            />
+      <section id="top" className="relative border-b border-border">
+        <div className="mx-auto grid max-w-6xl gap-14 px-6 py-24 lg:grid-cols-[1.15fr_.85fr] lg:px-8 lg:py-32">
+          <div className="flex flex-col justify-center">
+            <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-primary"><Sparkles className="size-4" /> Cybersecurity / GRC</p>
+            <h1 className="max-w-4xl text-balance font-sans text-5xl font-semibold leading-[1.04] tracking-[-0.05em] sm:text-7xl">Turning security requirements into <span className="text-primary">practical controls.</span></h1>
+            <p className="mt-8 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground">I&apos;m Abdulmohsen Alnowayhi, a Computer Science with AI and Cybersecurity graduate building toward a career in Governance, Risk &amp; Compliance.</p>
+            <div className="mt-10 flex flex-wrap items-center gap-4"><a href="#projects" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5">Explore security work <ArrowUpRight className="size-4" /></a><a href="https://www.linkedin.com/in/abdulmohsen-alnowayhi-b01b21255" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-medium hover:bg-muted">LinkedIn <ExternalLink className="size-4" /></a></div>
           </div>
-
-          <nav className="relative py-6">
-            <ul className="space-y-8">
-              {navigationItems.map((item, index) => {
-                const isActive = activeSection === item.id
-                return (
-                  <li key={item.id} className="relative flex items-center justify-center">
-                    <button
-                      onClick={() => scrollToSection(item.id)}
-                      className="group relative flex items-center transition-all duration-300 hover:scale-110"
-                    >
-                      {/* Dot */}
-                      <div
-                        className={`w-4 h-4 rounded-full border-2 transition-all duration-300 relative z-10 ${
-                          isActive
-                            ? "bg-indigo-600 border-indigo-600 scale-125 shadow-lg shadow-indigo-500/50"
-                            : "bg-white border-slate-300 group-hover:border-indigo-400 group-hover:bg-indigo-50"
-                        }`}
-                      >
-                        {isActive && (
-                          <div className="absolute inset-0 rounded-full bg-indigo-600 animate-ping opacity-75" />
-                        )}
-                      </div>
-
-                      {/* Label */}
-                      <span
-                        className={`absolute right-full mr-6 whitespace-nowrap text-sm font-medium px-3 py-2 rounded-lg backdrop-blur-sm border transition-all duration-300 ${
-                          isActive
-                            ? "bg-indigo-600 text-white border-indigo-600 opacity-100 translate-x-0 shadow-lg"
-                            : "bg-white/95 text-slate-600 border-slate-200/50 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0"
-                        }`}
-                      >
-                        {item.label}
-                        <div className="absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2 w-0 h-0 border-l-4 border-r-0 border-t-4 border-b-4 border-l-current border-t-transparent border-b-transparent" />
-                      </span>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
+          <div className="relative flex items-end rounded-2xl bg-primary p-8 text-primary-foreground sm:p-10 lg:min-h-[430px]">
+            <div className="absolute right-8 top-8 font-mono text-xs text-primary-foreground/60">RIYADH / KSA</div>
+            <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-primary-foreground/60">Current focus</p><p className="mt-4 max-w-sm text-3xl font-medium leading-tight tracking-tight">Risk-aware systems. Human-centred security. Clearer operations.</p><div className="mt-12 flex items-center gap-3 border-t border-primary-foreground/20 pt-5 text-sm text-primary-foreground/70"><span className="size-2 rounded-full bg-accent" /> Available for GRC opportunities</div></div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Main Content */}
-      <main>
-        {/* Hero Section */}
-        <section
-          id="hero"
-          className="min-h-screen flex items-center justify-center px-4 relative"
-          ref={sectionRefs.hero}
-        >
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <div
-              className={`transition-all duration-1000 ease-out ${
-                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-indigo-700 bg-clip-text text-transparent mb-6 animate-gradient">
-                Hi There,
-              </h1>
-              <h2
-                className={`text-4xl md:text-6xl font-bold text-slate-600 mb-8 transition-all duration-1000 ease-out ${
-                  isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "300ms" }}
-              >
-                I'm{" "}
-                <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
-                  Abdulmohsen Alnowayhi
-                </span>
-              </h2>
-              <div
-                className={`h-20 flex items-center justify-center mb-8 transition-all duration-1000 ease-out ${
-                  isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "600ms" }}
-              >
-                <span className="text-2xl md:text-4xl font-medium">
-                  I am a{" "}
-                  <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent font-semibold">
-                    {displayText}
-                  </span>
-                  <span className="animate-pulse text-indigo-600">|</span>
-                </span>
-              </div>
-              <p
-                className={`text-xl text-slate-600 max-w-3xl mx-auto mb-12 transition-all duration-1000 ease-out ${
-                  isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "900ms" }}
-              >
-                Passionate about building secure, compliant, and resilient organizations through effective governance,
-                risk management, and compliance practices.
-              </p>
-              <div
-                className={`transition-all duration-1000 ease-out ${
-                  isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "1200ms" }}
-              >
-                <button
-                  onClick={() => scrollToSection("about")}
-                  className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/25"
-                >
-                  Explore My Journey
-                  <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+      <section id="about" className="mx-auto max-w-6xl px-6 py-24 lg:px-8 lg:py-32"><div className="grid gap-12 lg:grid-cols-[.75fr_1.25fr]"><div><p className="eyebrow">01 / Profile</p><h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">Security is a business enabler.</h2></div><div className="max-w-2xl"><p className="text-xl leading-9 text-foreground/80">My work sits between technical delivery, privacy, and the people who make controls real. I&apos;m currently a Sales Specialist at Saudi Liebherr, while staying focused on the cybersecurity and GRC path that shaped my degree and projects.</p><p className="mt-6 leading-7 text-muted-foreground">From reviewing a deployed internal app against Saudi PDPL requirements to securing data-heavy event operations, I bring an operator&apos;s perspective to governance: understand the risk, make the control usable, and document what matters.</p><div className="mt-10 grid grid-cols-2 gap-8 border-t border-border pt-8 sm:grid-cols-4"><div><p className="stat">200+</p><p className="stat-label">participants’ data handled</p></div><div><p className="stat">99.8%</p><p className="stat-label">attendance accuracy</p></div><div><p className="stat">9k+</p><p className="stat-label">automation reach</p></div><div><p className="stat">0</p><p className="stat-label">security breaches</p></div></div></div></div></section>
 
-        {/* About Me Section */}
-        <section id="about" className="py-20 px-4 relative" ref={sectionRefs.about}>
-          <div className="max-w-4xl mx-auto">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 400 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              About Me
-            </h2>
-            <Card
-              className={`shadow-xl border-0 bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                scrollY > 500 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "200ms" }}
-            >
-              <CardContent className="p-8 md:p-12">
-                <div className="space-y-6 text-lg leading-relaxed">
-                  <p className="text-slate-700 first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-600 first-letter:float-left first-letter:mr-3 first-letter:mt-1">
-                    I am passionate about establishing strong security foundations and ensuring organizational
-                    compliance. My focus lies in understanding and implementing governance frameworks that protect
-                    businesses while enabling growth and innovation.
-                  </p>
-                  <p className="text-slate-600">
-                    With a keen analytical mindset and meticulous attention to detail, I am eager to learn and apply
-                    knowledge in real-world scenarios, contributing to the development of robust risk management
-                    strategies and compliance programs.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+      <section id="capabilities" className="border-y border-border bg-muted/40"><div className="mx-auto max-w-6xl px-6 py-24 lg:px-8"><p className="eyebrow">02 / Capabilities</p><div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">{capabilities.map((item) => <article key={item.title} className="bg-background p-8"><item.icon className="size-7 text-primary" /><h3 className="mt-8 text-xl font-semibold">{item.title}</h3><p className="mt-3 leading-7 text-muted-foreground">{item.text}</p></article>)}</div></div></section>
 
-        {/* Education Section */}
-        <section
-          id="education"
-          className="py-20 px-4 bg-gradient-to-br from-indigo-50/30 to-blue-50/30 relative"
-          ref={sectionRefs.education}
-        >
-          <div className="max-w-4xl mx-auto">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 900 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              Education
-            </h2>
-            <Card
-              className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                scrollY > 1000 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "200ms" }}
-            >
-              <CardContent className="p-8 md:p-12">
-                <div className="mb-8">
-                  <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-                    BSc Computer Science with Cybersecurity
-                  </h3>
-                  <p className="text-xl text-indigo-600 font-semibold mb-2">University of Liverpool</p>
-                  <p className="text-slate-500 text-lg">September 2025</p>
-                </div>
+      <section id="projects" className="mx-auto max-w-6xl px-6 py-24 lg:px-8 lg:py-32"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="eyebrow">03 / Selected work</p><h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">Proof, not promises.</h2></div><p className="max-w-xs text-sm leading-6 text-muted-foreground">A selection of security-minded projects built around real operational needs.</p></div><div className="mt-14 flex flex-col">{projects.map((project) => <article key={project.number} className="group grid gap-6 border-t border-border py-8 md:grid-cols-[80px_1fr_1.1fr] md:gap-10"><p className="font-mono text-sm text-primary">{project.number}</p><div><p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">{project.tag}</p><h3 className="mt-3 text-2xl font-semibold tracking-tight">{project.title}</h3></div><div><p className="leading-7 text-muted-foreground">{project.text}</p><p className="mt-5 flex items-center gap-2 text-sm font-medium text-foreground"><ChevronRight className="size-4 text-primary" /> {project.outcome}</p></div></article>)}</div></section>
 
-                <div className="mb-8">
-                  <h4 className="text-xl font-bold text-slate-700 mb-4 flex items-center gap-2">
-                    <Shield className="w-6 h-6 text-indigo-600" />
-                    Final Year Project: Cyber Resilience Training Platform
-                  </h4>
-                  <p className="text-slate-600 text-lg leading-relaxed mb-6">
-                    A comprehensive platform designed to enhance organizational cyber resilience through integrated
-                    training and assessment modules, directly connecting to core GRC principles.
-                  </p>
-                </div>
+      <section id="experience" className="border-y border-border bg-primary text-primary-foreground"><div className="mx-auto max-w-6xl px-6 py-24 lg:px-8 lg:py-32"><div className="grid gap-14 lg:grid-cols-[.7fr_1.3fr]"><div><p className="eyebrow text-primary-foreground/60">04 / Experience</p><h2 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl">An operator&apos;s view of risk.</h2><p className="mt-6 max-w-sm leading-7 text-primary-foreground/70">Every role has sharpened the same instinct: protect the information, make the process reliable, and escalate early.</p></div><div>{roles.map((role) => <article key={role.title} className="relative border-t border-primary-foreground/20 py-7 first:border-t-0 first:pt-0"><div className="flex flex-col justify-between gap-2 sm:flex-row"><div><h3 className="text-xl font-medium">{role.title} {role.current && <span className="ml-2 inline-flex size-2 rounded-full bg-accent align-middle" />}</h3><p className="mt-1 text-sm text-primary-foreground/60">{role.company}</p></div><p className="font-mono text-xs text-primary-foreground/60">{role.dates}</p></div><p className="mt-4 max-w-2xl leading-7 text-primary-foreground/70">{role.text}</p></article>)}</div></div></div></section>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                  {[
-                    {
-                      icon: Shield,
-                      title: "Risk Management",
-                      items: [
-                        "Phishing attack simulations",
-                        "Human-factor security risks",
-                        "Risk mitigation strategies",
-                      ],
-                    },
-                    {
-                      icon: Users,
-                      title: "Governance",
-                      items: [
-                        "Performance tracking systems",
-                        "Security awareness training",
-                        "Organizational oversight",
-                      ],
-                    },
-                    {
-                      icon: FileCheck,
-                      title: "Compliance",
-                      items: [
-                        "Security awareness alignment",
-                        "Framework-compliant resources",
-                        "Regulatory standard adherence",
-                      ],
-                    },
-                  ].map((item, index) => (
-                    <div
-                      key={item.title}
-                      className={`bg-white p-8 rounded-2xl border border-slate-100 hover:shadow-lg transition-all duration-500 hover:scale-[1.02] ${
-                        scrollY > 1100 + index * 100 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                      }`}
-                      style={{ transitionDelay: `${getAnimationDelay(400, index)}ms` }}
-                    >
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-slate-50 rounded-xl">
-                          <item.icon className="w-6 h-6 text-slate-700" />
-                        </div>
-                        <h5 className="text-xl font-bold text-slate-800">{item.title}</h5>
-                      </div>
-                      <ul className="space-y-3">
-                        {item.items.map((listItem, i) => (
-                          <li key={i} className="text-slate-600 leading-relaxed">
-                            {listItem}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+      <section id="contact" className="mx-auto max-w-6xl px-6 py-24 lg:px-8 lg:py-32"><div className="rounded-2xl border border-border bg-muted/50 p-8 sm:p-12 lg:flex lg:items-end lg:justify-between"><div><p className="eyebrow">05 / Contact</p><h2 className="mt-5 max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">Let&apos;s make security easier to act on.</h2><p className="mt-6 max-w-lg leading-7 text-muted-foreground">Open to conversations about entry-level GRC, compliance, privacy, and security operations opportunities.</p></div><div className="mt-10 flex flex-col items-start gap-4 lg:mt-0"><a href="mailto:abdulmohsenalnowayhi@gmail.com" className="inline-flex items-center gap-3 text-lg font-medium hover:text-primary"><Mail className="size-5 text-primary" /> abdulmohsenalnowayhi@gmail.com</a><a href="https://www.linkedin.com/in/abdulmohsen-alnowayhi-b01b21255" target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground"><Linkedin className="size-5" /> Connect on LinkedIn <ArrowUpRight className="size-4" /></a></div></div></section>
 
-        {/* Skills Section */}
-        <section id="skills" className="py-20 px-4 relative" ref={sectionRefs.skills}>
-          <div className="max-w-4xl mx-auto">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 1500 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              Skills & Expertise
-            </h2>
-
-            <div className="space-y-8">
-              {/* Technical Skills */}
-              <Card
-                className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                  scrollY > 1600 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "200ms" }}
-              >
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-2xl flex items-center gap-3">
-                    <div className="p-2 bg-indigo-100 rounded-lg">
-                      <Code className="w-6 h-6 text-indigo-600" />
-                    </div>
-                    Technical Skills
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex flex-wrap gap-3">
-                    {[
-                      "Cyber Security",
-                      "Risk Management",
-                      "Compliance Monitoring",
-                      "Security Policy Documentation",
-                      "Microsoft Office",
-                      "Reporting & Documentation",
-                      "Project Management",
-                      "Quality Management",
-                    ].map((skill, index) => (
-                      <Badge
-                        key={skill}
-                        className={`bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-800 hover:from-indigo-200 hover:to-indigo-300 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-md cursor-default ${
-                          scrollY > 1700 + index * 50 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                        }`}
-                        style={{ transitionDelay: `${getAnimationDelay(300, index)}ms` }}
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Soft Skills */}
-              <Card
-                className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                  scrollY > 1800 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: "400ms" }}
-              >
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-2xl flex items-center gap-3">
-                    <div className="p-2 bg-slate-100 rounded-lg">
-                      <Brain className="w-6 h-6 text-slate-600" />
-                    </div>
-                    Soft Skills
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex flex-wrap gap-3">
-                    {[
-                      "Creative Thinking",
-                      "Leadership Skills",
-                      "Communication Skills",
-                      "Client Relationship Management",
-                      "Team Management",
-                      "Ability to Work Under Pressure",
-                      "Strategic Thinking",
-                      "Task Distribution",
-                      "Estimation",
-                    ].map((skill, index) => (
-                      <Badge
-                        key={skill}
-                        className={`bg-gradient-to-r from-slate-100 to-slate-200 text-slate-800 hover:from-slate-200 hover:to-slate-300 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-md cursor-default ${
-                          scrollY > 1900 + index * 50 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                        }`}
-                        style={{ transitionDelay: `${getAnimationDelay(500, index)}ms` }}
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Experience Section */}
-        <section
-          id="experience"
-          className="py-20 px-4 bg-gradient-to-br from-slate-50/30 to-indigo-50/30 relative"
-          ref={sectionRefs.experience}
-        >
-          <div className="max-w-4xl mx-auto">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 2300 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              Professional Experience
-            </h2>
-            <div className="space-y-8">
-              {[
-                {
-                  title: "IT Specialist and Administration",
-                  company: "3points Crowd Management SA, Riyadh",
-                  period: "July 2023 – September 2023",
-                  achievements: [
-                    "Coordinated and led attendance monitoring operations at the world's largest real estate exhibition, ensuring smooth entry and data accuracy for over 1000 staff.",
-                    "Designed and deployed a WhatsApp automation system to contact over 9000 individuals for interview scheduling, demonstrating strong communication and digital outreach skills.",
-                    "Maintained accurate attendance records and collaborated with payroll and HR teams to align compensation with verified participation.",
-                    "Supported on-site staff with technical issues, ensuring efficient operational continuity during a high-pressure event.",
-                  ],
-                },
-                {
-                  title: "Visitor Registration Coordinator",
-                  company: "Shine – Event Staffing SA, Jeddah",
-                  period: "August 2022 - September 2022",
-                  achievements: [
-                    "Served as the first point of contact for attendees, offering clear and courteous guidance and skills directly applicable to supporting students during university enrolment.",
-                    "Collected and processed visitor data quickly and accurately under time constraints, mirroring the responsiveness needed for student transition periods.",
-                    "Worked closely with event management and security teams to resolve entry issues and ensure smooth flow at access points.",
-                    "Maintained confidentiality when handling visitor's personal information.",
-                  ],
-                },
-              ].map((job, index) => (
-                <Card
-                  key={job.title}
-                  className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                    scrollY > 2400 + index * 200 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                  }`}
-                  style={{ transitionDelay: `${getAnimationDelay(200, index)}ms` }}
-                >
-                  <CardContent className="p-8">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                      <div>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">{job.title}</h3>
-                        <p className="text-lg text-indigo-600 font-semibold">{job.company}</p>
-                      </div>
-                      <span className="text-slate-500 font-medium mt-2 md:mt-0">{job.period}</span>
-                    </div>
-                    <ul className="space-y-3">
-                      {job.achievements.map((achievement, i) => (
-                        <li key={i} className="text-slate-600 flex items-start gap-3 leading-relaxed">
-                          <span className="w-2 h-2 rounded-full bg-indigo-400 mt-2 flex-shrink-0" />
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Certifications Section */}
-        <section id="certifications" className="py-20 px-4 relative" ref={sectionRefs.certifications}>
-          <div className="max-w-4xl mx-auto">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 2900 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              Professional Certifications
-            </h2>
-            <div className="space-y-8">
-              {[
-                {
-                  title: "CompTIA Security+",
-                  issueDate: "May 31, 2025",
-                  expirationDate: "May 31, 2028",
-                  image: "/comptia-security-plus.png",
-                  link: "https://www.certmetrics.com/comptia/public/verification.aspx/",
-                  description: "Industry-standard certification validating foundational cybersecurity skills",
-                },
-                {
-                  title: "Google Project Management",
-                  issueDate: "May 25, 2025",
-                  expirationDate: null,
-                  image: "/google-project-management.png",
-                  link: "https://www.coursera.org/account/accomplishments/specialization/certificate/NHNAFSKNH1AP",
-                  description: "Comprehensive project management specialization covering modern methodologies",
-                },
-              ].map((cert, index) => (
-                <Card
-                  key={cert.title}
-                  className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] overflow-hidden group cursor-pointer ${
-                    scrollY > 3000 + index * 200 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                  }`}
-                  style={{ transitionDelay: `${getAnimationDelay(200, index)}ms` }}
-                  onClick={() => window.open(cert.link, "_blank")}
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <Image
-                      src={cert.image || "/placeholder.svg"}
-                      alt={`${cert.title} Certificate`}
-                      fill
-                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-4 right-4 p-2 bg-white/90 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                      <ExternalLink className="w-4 h-4 text-slate-600" />
-                    </div>
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors duration-300">
-                      {cert.title}
-                    </h3>
-                    <p className="text-slate-600 mb-4 text-sm">{cert.description}</p>
-                    <div className="space-y-2">
-                      <div className="flex items-center text-slate-600">
-                        <span className="font-semibold w-28">Issue Date:</span>
-                        <span>{cert.issueDate}</span>
-                      </div>
-                      {cert.expirationDate && (
-                        <div className="flex items-center text-slate-600">
-                          <span className="font-semibold w-28">Expiration:</span>
-                          <span>{cert.expirationDate}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-4 text-sm text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      Click to verify certificate →
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section
-          id="contact"
-          className="py-20 px-4 bg-gradient-to-br from-indigo-50/30 to-blue-50/30 relative"
-          ref={sectionRefs.contact}
-        >
-          <div className="max-w-4xl mx-auto text-center">
-            <h2
-              className={`text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent transition-all duration-700 ease-out ${
-                scrollY > 3500 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
-              Let's Connect
-            </h2>
-            <p
-              className={`text-xl text-slate-600 mb-12 transition-all duration-700 ease-out ${
-                scrollY > 3500 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "200ms" }}
-            >
-              Ready to discuss opportunities in GRC and cybersecurity
-            </p>
-
-            <Card
-              className={`shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-700 ease-out hover:scale-[1.02] ${
-                scrollY > 3600 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "400ms" }}
-            >
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-                  <Button
-                    asChild
-                    className="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-medium rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-indigo-500/25 group"
-                  >
-                    <a href="mailto:abdulmohsenalnowayhi@gmail.com" className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                      Email Me
-                    </a>
-                  </Button>
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full md:w-auto border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white px-8 py-4 text-lg font-medium rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl group"
-                  >
-                    <a
-                      href="https://www.linkedin.com/in/abdulmohsen-alnowayhi-b01b21255/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3"
-                    >
-                      <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                      LinkedIn Profile
-                    </a>
-                  </Button>
-                </div>
-
-                <div
-                  className={`mt-8 p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl transition-all duration-700 ease-out ${
-                    scrollY > 3700 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                  }`}
-                  style={{ transitionDelay: "600ms" }}
-                >
-                  <p className="text-slate-600 leading-relaxed">
-                    I'm actively seeking entry-level opportunities in GRC, compliance, and cybersecurity. Feel free to
-                    reach out to discuss how my skills and passion can contribute to your organization.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      </main>
-
-      <style jsx global>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(0.5deg); }
-          66% { transform: translateY(4px) rotate(-0.5deg); }
-        }
-        
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        .animate-float {
-          animation: float 8s ease-in-out infinite;
-        }
-        
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 4s ease infinite;
-        }
-        
-        html {
-          scroll-behavior: smooth;
-        }
-      `}</style>
-    </div>
+      <footer className="border-t border-border"><div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between lg:px-8"><p className="font-mono text-xs">© 2026 Abdulmohsen Alnowayhi</p><div className="flex items-center gap-5"><span>Riyadh, Saudi Arabia</span><a href="#top" className="font-medium text-foreground hover:text-primary">Back to top ↑</a></div></div></footer>
+    </main>
   )
 }
+
